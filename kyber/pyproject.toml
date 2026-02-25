@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kyber-agent"
+version = "1.0.0"
+description = "Cybernetic Agent Operating System — Beer VSM + Ashby Variety + Shannon Entropy + Maturana Autopoiesis for multi-agent Claude deployments"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+keywords = ["agents","cybernetics","LLM","AI","VSM","autopoiesis","multi-agent"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "anthropic>=0.40.0",
+    "asyncio",
+]
+
+[project.optional-dependencies]
+full = [
+    "prometheus-client>=0.20",
+    "redis>=5.0",
+    "pinecone-client>=3.0",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "black",
+    "mypy",
+]
+
+[project.urls]
+Homepage    = "https://github.com/kyber-os/kyber"
+Repository  = "https://github.com/kyber-os/kyber"
+Issues      = "https://github.com/kyber-os/kyber/issues"
+
+[project.scripts]
+kyber = "kyber.__main__:main"

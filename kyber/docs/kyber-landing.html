@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYBER — Cybernetic Agent Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#020408;--grid:#0a1018;--panel:#0d1520;--border:#1a2535;
+  --signal:#00ff88;--signal-dim:#00ff8825;
+  --pain:#ff4455;--pain-dim:#ff445520;
+  --amber:#ffaa00;--amber-dim:#ffaa0020;
+  --ice:#00cfff;--ice-dim:#00cfff18;
+  --text:#c8d8e8;--muted:#4a6080;--white:#f0f8ff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--text);font-family:'Space Mono',monospace;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.4;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--signal),transparent);animation:scan 7s linear infinite;z-index:100;pointer-events:none;}
+@keyframes scan{0%{top:0;opacity:1;}95%{opacity:.8;}100%{top:100vh;opacity:0;}}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:80px 8vw;border-bottom:1px solid var(--border);}
+.label{font-size:10px;letter-spacing:.35em;color:var(--signal);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.label::before{content:'';width:28px;height:1px;background:var(--signal);}
+h1{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,10vw,9rem);font-weight:800;line-height:.9;letter-spacing:-.03em;color:var(--white);margin-bottom:28px;}
+h1 span{color:var(--signal);}
+.sub{font-family:'Syne',sans-serif;font-size:clamp(1rem,2.2vw,1.5rem);color:var(--muted);max-width:580px;line-height:1.55;margin-bottom:44px;}
+.sub em{color:var(--amber);font-style:normal;font-weight:700;}
+.cta{display:flex;gap:14px;flex-wrap:wrap;}
+.btn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;padding:15px 30px;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+.btn-p{color:var(--void);background:var(--signal);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.btn-p:hover{background:var(--white);transform:translateY(-2px);}
+.btn-g{color:var(--signal);background:transparent;border:1px solid var(--signal);}
+.btn-g:hover{background:var(--signal-dim);}
+
+/* SECTIONS */
+.sec{position:relative;z-index:1;padding:90px 8vw;border-bottom:1px solid var(--border);}
+.sec-label{font-size:10px;letter-spacing:.4em;color:var(--muted);text-transform:uppercase;margin-bottom:44px;display:flex;align-items:center;gap:10px;}
+.sec-label::before{content:'//';color:var(--signal);}
+h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:800;color:var(--white);line-height:1.05;margin-bottom:20px;letter-spacing:-.02em;}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:56px 0;}
+.metric{background:var(--panel);padding:32px 24px;}
+.metric-v{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:var(--signal);line-height:1;}
+.metric-l{font-size:11px;color:var(--muted);letter-spacing:.1em;margin-top:6px;}
+.metric-s{font-size:10px;color:var(--muted);opacity:.6;margin-top:4px;}
+
+/* VSM */
+.vsm-stack{display:flex;flex-direction:column;gap:3px;max-width:860px;margin:56px 0;}
+.tier{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:20px;padding:18px 24px;border:1px solid var(--border);background:var(--panel);position:relative;overflow:hidden;transition:transform .2s;}
+.tier::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.tier:hover{transform:translateX(4px);}
+.tier.s5::before{background:var(--pain);}
+.tier.s4::before{background:var(--amber);}
+.tier.s3::before{background:var(--signal);}
+.tier.s2::before{background:var(--ice);}
+.tier.s1::before{background:var(--muted);}
+.t-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;}
+.s5 .t-num{color:var(--pain);}
+.s4 .t-num{color:var(--amber);}
+.s3 .t-num{color:var(--signal);}
+.s2 .t-num{color:var(--ice);}
+.s1 .t-num{color:var(--muted);}
+.t-body h3{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--white);letter-spacing:.1em;margin-bottom:3px;}
+.t-body p{font-size:11px;color:var(--muted);line-height:1.5;}
+.t-impl{font-size:10px;color:var(--signal);text-align:right;line-height:1.7;}
+
+/* CODE */
+.code-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:44px 0;}
+@media(max-width:720px){.code-grid{grid-template-columns:1fr;}}
+.card{background:var(--panel);border:1px solid var(--border);overflow:hidden;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--border);background:var(--grid);}
+.card-title{font-size:10px;letter-spacing:.18em;color:var(--muted);}
+.tag{font-size:9px;padding:3px 7px;border:1px solid;letter-spacing:.1em;}
+.ts{color:var(--signal);border-color:var(--signal);}
+.ta{color:var(--amber);border-color:var(--amber);}
+.tp{color:var(--pain);border-color:var(--pain);}
+pre{padding:22px 18px;font-size:11px;line-height:1.75;overflow-x:auto;color:var(--text);}
+.kw{color:var(--ice);}
+.fn{color:var(--amber);}
+.st{color:var(--signal);}
+.cm{color:var(--muted);}
+.nu{color:var(--pain);}
+
+/* TABLE */
+.etable{width:100%;border-collapse:collapse;margin:44px 0;font-size:12px;}
+.etable th{text-align:left;padding:11px 18px;font-size:9px;letter-spacing:.22em;color:var(--muted);border-bottom:1px solid var(--border);}
+.etable td{padding:15px 18px;border-bottom:1px solid var(--border);}
+.etable tr:hover td{background:var(--grid);}
+.bar-wrap{display:flex;align-items:center;gap:10px;}
+.bar{height:5px;background:var(--signal);}
+.bar.m{background:var(--amber);}
+.bar.h{background:var(--pain);}
+.bar-l{font-size:10px;color:var(--muted);}
+.hi td{background:var(--signal-dim);color:var(--signal);}
+
+/* ALGEDONIC */
+.algedo{display:flex;flex-direction:column;gap:2px;margin:44px 0;max-width:680px;}
+.sig{display:grid;grid-template-columns:76px 56px 1fr;gap:14px;align-items:center;padding:15px 18px;border-left:3px solid transparent;font-size:11px;animation:fi .5s ease forwards;opacity:0;}
+.sig.ok{border-color:var(--signal);background:var(--signal-dim);}
+.sig.bad{border-color:var(--pain);background:var(--pain-dim);}
+.sig.wait{border-color:var(--amber);background:var(--amber-dim);}
+@keyframes fi{to{opacity:1;}}
+.sig:nth-child(1){animation-delay:.2s;}
+.sig:nth-child(2){animation-delay:.7s;}
+.sig:nth-child(3){animation-delay:1.2s;}
+.sig:nth-child(4){animation-delay:1.7s;}
+.stype{font-size:9px;letter-spacing:.12em;font-weight:700;}
+.ok .stype{color:var(--signal);}
+.bad .stype{color:var(--pain);}
+.wait .stype{color:var(--amber);}
+.ssev{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.ok .ssev{color:var(--signal);}
+.bad .ssev{color:var(--pain);}
+.wait .ssev{color:var(--amber);}
+.smsg{color:var(--text);line-height:1.4;}
+.ssrc{color:var(--muted);font-size:9px;margin-top:2px;}
+
+/* THEORY */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:44px 0;}
+.tc{background:var(--panel);padding:28px;transition:background .2s;}
+.tc:hover{background:var(--grid);}
+.tyear{font-size:9px;color:var(--muted);letter-spacing:.22em;margin-bottom:8px;}
+.tname{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--white);margin-bottom:8px;}
+.tprinciple{font-size:11px;color:var(--signal);font-style:italic;margin-bottom:10px;line-height:1.4;}
+.timpl{font-size:11px;color:var(--muted);line-height:1.6;}
+
+/* ROADMAP */
+.road{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:44px 0;}
+.phase{background:var(--panel);padding:26px;}
+.phase.now{border-top:2px solid var(--signal);}
+.ph-l{font-size:9px;letter-spacing:.3em;color:var(--muted);margin-bottom:10px;}
+.ph-n{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--white);margin-bottom:14px;}
+.now .ph-n{color:var(--signal);}
+.ph-items{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.ph-items li{font-size:10px;color:var(--muted);display:flex;gap:7px;}
+.ph-items li::before{content:'→';color:var(--signal);flex-shrink:0;}
+
+/* FOOTER */
+footer{position:relative;z-index:1;padding:56px 8vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.foot-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--signal);}
+.foot-meta{font-size:10px;color:var(--muted);text-align:right;line-height:1.8;}
+@media(max-width:600px){
+  .sec{padding:56px 6vw;}
+  .tier{grid-template-columns:60px 1fr;}
+  .t-impl{display:none;}
+  footer{flex-direction:column;align-items:flex-start;}
+  .foot-meta{text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="label">Cybernetic Agent Framework v0.1.0-MVP</div>
+  <h1>KY<span>BER</span></h1>
+  <p class="sub">
+    What <em>Kubernetes</em> is to containers —<br>
+    <em>KYBER</em> is to agents.
+  </p>
+  <div class="cta">
+    <a href="#install" class="btn btn-p">pip install kyber-agents</a>
+    <a href="https://github.com/kyber-ai/kyber" class="btn btn-g">GitHub →</a>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-label">Why it matters</div>
+  <h2>Every agent framework<br>solved S1 only.</h2>
+  <p style="max-width:580px;color:var(--muted);line-height:1.7;margin-bottom:8px;">
+    Companies deploying 100+ agents have no framework to route tasks by requisite variety,
+    minimize token entropy across comms, self-heal when agents fail, enforce governance
+    without hardcoding, or signal humans only when necessary.
+  </p>
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-v">8×</div>
+      <div class="metric-l">Cost Reduction</div>
+      <div class="metric-s">TOON vs XML · 1M calls/day</div>
+    </div>
+    <div class="metric">
+      <div class="metric-v">S1–S5</div>
+      <div class="metric-l">VSM Subsystems</div>
+      <div class="metric-s">All 5, not just S1</div>
+    </div>
+    <div class="metric">
+      <div class="metric-v">3</div>
+      <div class="metric-l">Recursion Depth</div>
+      <div class="metric-s">Viable orgs nest to depth 3</div>
+    </div>
+    <div class="metric">
+      <div class="metric-v">0ms</div>
+      <div class="metric-l">Algedonic Latency</div>
+      <div class="metric-s">Pain bypasses all hierarchy</div>
+    </div>
+  </div>
+
+  <h2>Five subsystems.<br>Every agent.</h2>
+  <div class="vsm-stack">
+    <div class="tier s5">
+      <div class="t-num">S5</div>
+      <div class="t-body"><h3>POLICY</h3><p>Governance thresholds, charter, values. The invariant identity that never changes.</p></div>
+      <div class="t-impl">PolicyEngine<br>SpendThresholds<br>ControlMode</div>
+    </div>
+    <div class="tier s4">
+      <div class="t-num">S4</div>
+      <div class="t-body"><h3>INTELLIGENCE</h3><p>Environmental scanning, market adaptation, strategic variety management.</p></div>
+      <div class="t-impl">s4_scan()<br>ClaudeAgent<br>claude-opus-4-6</div>
+    </div>
+    <div class="tier s3">
+      <div class="t-num">S3</div>
+      <div class="t-body"><h3>COHESION + AUDIT</h3><p>Resource allocation, variety-matched routing, independent S3* audit channel (60s loop).</p></div>
+      <div class="t-impl">s3_allocate()<br>s3_audit()<br>Independent loop</div>
+    </div>
+    <div class="tier s2">
+      <div class="t-num">S2</div>
+      <div class="t-body"><h3>COORDINATION</h3><p>Anti-oscillation, priority scheduling, task routing. Prevents agent conflict.</p></div>
+      <div class="t-impl">s2_coordinate()<br>asyncio.Queue<br>Priority sort</div>
+    </div>
+    <div class="tier s1">
+      <div class="t-num">S1</div>
+      <div class="t-body"><h3>OPERATIONS</h3><p>The actual work. Override <code>s1_execute()</code> — everything else has working defaults.</p></div>
+      <div class="t-impl">s1_execute()<br>claude-haiku<br>Task → Result</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-label">Shannon Optimizer</div>
+  <h2>Token entropy<br>is operating cost.</h2>
+  <p style="max-width:580px;color:var(--muted);line-height:1.7;margin-bottom:44px;">
+    H = -Σ p(x) log₂ p(x). At 1M agent calls/day, JSON vs XML = 8× cost difference.
+    KYBER's TOON format applies information theory directly — minimum entropy per semantic unit.
+  </p>
+  <table class="etable">
+    <thead><tr><th>FORMAT</th><th>TOKEN RATIO</th><th>RELATIVE COST</th><th>USE WHEN</th></tr></thead>
+    <tbody>
+      <tr class="hi">
+        <td>TOON</td>
+        <td><div class="bar-wrap"><div class="bar" style="width:50px"></div><span class="bar-l">0.27×</span></div></td>
+        <td style="color:var(--signal)">Minimum</td>
+        <td>All agent-to-agent messages</td>
+      </tr>
+      <tr>
+        <td>Markdown</td>
+        <td><div class="bar-wrap"><div class="bar m" style="width:130px"></div><span class="bar-l">0.64×</span></div></td>
+        <td>Low</td>
+        <td>Structured human reports</td>
+      </tr>
+      <tr>
+        <td>JSON</td>
+        <td><div class="bar-wrap"><div class="bar m" style="width:190px"></div><span class="bar-l">1.00×</span></div></td>
+        <td>Baseline</td>
+        <td>External APIs only</td>
+      </tr>
+      <tr>
+        <td>Prose</td>
+        <td><div class="bar-wrap"><div class="bar h" style="width:260px"></div><span class="bar-l">1.60×</span></div></td>
+        <td>High</td>
+        <td>HITL human notifications only</td>
+      </tr>
+      <tr>
+        <td>XML</td>
+        <td><div class="bar-wrap"><div class="bar h" style="width:340px"></div><span class="bar-l">1.5–1.8×</span></div></td>
+        <td style="color:var(--pain)">Maximum waste</td>
+        <td style="color:var(--pain)">Never internally</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="code-grid">
+    <div class="card">
+      <div class="card-head"><span class="card-title">TOON — 12 TOKENS</span><span class="tag ts">INTERNAL</span></div>
+      <pre>INT:code_review
+SRC:ceo_001
+TGT:eng_002
+MID:m_7f3a
+payload.pr:<span class="kw">i</span>:<span class="nu">142</span>
+payload.branch:<span class="kw">s</span>:<span class="st">feat/auth</span>
+payload.priority:<span class="kw">i</span>:<span class="nu">2</span>
+payload.ready:<span class="kw">b</span>:<span class="nu">1</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">JSON — 47 TOKENS</span><span class="tag ta">EXTERNAL ONLY</span></div>
+      <pre>{
+  <span class="st">"intent"</span>: <span class="st">"code_review"</span>,
+  <span class="st">"src"</span>: <span class="st">"ceo_001"</span>,
+  <span class="st">"tgt"</span>: <span class="st">"eng_002"</span>,
+  <span class="st">"mid"</span>: <span class="st">"m_7f3a"</span>,
+  <span class="st">"p"</span>: {
+    <span class="st">"pr"</span>: <span class="nu">142</span>, <span class="st">"branch"</span>: <span class="st">"feat/auth"</span>,
+    <span class="st">"priority"</span>: <span class="nu">2</span>, <span class="st">"ready"</span>: <span class="kw">true</span>
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-label">Algedonic Signals</div>
+  <h2>Pain and pleasure<br>bypass everything.</h2>
+  <p style="max-width:580px;color:var(--muted);line-height:1.7;margin-bottom:44px;">
+    Beer's core insight: urgent signals must reach the right person immediately —
+    not filtered through management layers. AlgedonicBus is a single async event
+    stream shared across the entire organization.
+  </p>
+  <div class="algedo">
+    <div class="sig ok">
+      <span class="stype">PLEASURE</span><span class="ssev">1</span>
+      <div><div class="smsg">100-task milestone: 98.7% success rate</div><div class="ssrc">ENG_AGENT → board_handler → log</div></div>
+    </div>
+    <div class="sig bad">
+      <span class="stype">PAIN</span><span class="ssev">7</span>
+      <div><div class="smsg">S3* audit: failure_rate=6.2% &gt; 5% threshold</div><div class="ssrc">CFO_AGENT → board_handler → HOTL notify</div></div>
+    </div>
+    <div class="sig wait">
+      <span class="stype">HITL</span><span class="ssev">8</span>
+      <div><div class="smsg">Approval required: $50k legal retainer — Cooley LLP</div><div class="ssrc">CFO_AGENT → board_handler → Slack #approvals</div></div>
+    </div>
+    <div class="sig bad">
+      <span class="stype">PAIN</span><span class="ssev">9</span>
+      <div><div class="smsg">Treasury below $5k USDC — operations at risk</div><div class="ssrc">CFO_AGENT → board_handler → PagerDuty</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-label">Theoretical Foundation</div>
+  <h2>The founders' vision.<br>Finally in code.</h2>
+  <div class="tgrid">
+    <div class="tc">
+      <div class="tyear">WIENER · 1948</div>
+      <div class="tname">Cybernetics</div>
+      <div class="tprinciple">"Control and communication in the animal and the machine"</div>
+      <div class="timpl">AlgedonicBus as nervous system. Feedback loops as control. The org IS a cybernetic system.</div>
+    </div>
+    <div class="tc">
+      <div class="tyear">SHANNON · 1948</div>
+      <div class="tname">Information Theory</div>
+      <div class="tprinciple">H = -Σ p(x) log₂ p(x)</div>
+      <div class="timpl">KyberMessage TOON. PromptOptimizer MDL. ContextWindowManager rate-distortion. Every token is entropy.</div>
+    </div>
+    <div class="tc">
+      <div class="tyear">ASHBY · 1956</div>
+      <div class="tname">Requisite Variety</div>
+      <div class="tprinciple">"Only variety can destroy variety"</div>
+      <div class="timpl">s3_allocate() routes by variety_required. ClaudeAgent: task complexity → Haiku/Sonnet/Opus.</div>
+    </div>
+    <div class="tc">
+      <div class="tyear">BEER · 1972</div>
+      <div class="tname">Viable System Model</div>
+      <div class="tprinciple">"The viable system is recursive"</div>
+      <div class="timpl">ViableAgent S1-S5 as Python methods. Every agent is both S1 in its parent and complete VSM in itself.</div>
+    </div>
+    <div class="tc">
+      <div class="tyear">MATURANA · 1972</div>
+      <div class="tname">Autopoiesis</div>
+      <div class="tprinciple">"The living system produces its own organization"</div>
+      <div class="timpl">AgentIdentity.charter = invariant. Agent state = variable. register_child() = self-production.</div>
+    </div>
+    <div class="tc">
+      <div class="tyear">CONANT-ASHBY · 1970</div>
+      <div class="tname">Good Regulator</div>
+      <div class="tprinciple">"Every good regulator must be a model of that system"</div>
+      <div class="timpl">ConstitutionBuilder generates the agent's internal world model. Variety of prompt must match domain.</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-label">Roadmap · MVP → Series B</div>
+  <h2>From framework<br>to agentic economy OS.</h2>
+  <div class="road">
+    <div class="phase now">
+      <div class="ph-l">NOW · MVP</div>
+      <div class="ph-n">Core Framework</div>
+      <ul class="ph-items">
+        <li>VSM S1-S5 base classes</li>
+        <li>AlgedonicBus signals</li>
+        <li>TOON message format</li>
+        <li>PolicyEngine governance</li>
+        <li>Claude API integration</li>
+        <li>Working 3-agent demo</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="ph-l">v0.2 · SEED</div>
+      <div class="ph-n">Observable</div>
+      <ul class="ph-items">
+        <li>Prometheus exporter</li>
+        <li>HOTL dashboard</li>
+        <li>LangSmith traces</li>
+        <li>PagerDuty integration</li>
+        <li>AgentRegistry persistence</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="ph-l">v0.3 · SERIES A</div>
+      <div class="ph-n">Persistent</div>
+      <ul class="ph-items">
+        <li>Cross-session memory</li>
+        <li>AgentMail identity</li>
+        <li>Multi-org federation</li>
+        <li>SaaS dashboard</li>
+        <li>Managed cloud</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="ph-l">v1.0 · SERIES B</div>
+      <div class="ph-n">Economic</div>
+      <ul class="ph-items">
+        <li>x402 micropayments</li>
+        <li>ERC-4337 agent wallets</li>
+        <li>Wyoming DAO LLC</li>
+        <li>Capability marketplace</li>
+        <li>Cross-org coupling</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="install">
+  <div class="sec-label">Get started</div>
+  <h2>Run in 60 seconds.</h2>
+  <div class="code-grid">
+    <div class="card">
+      <div class="card-head"><span class="card-title">INSTALL</span><span class="tag ts">TERMINAL</span></div>
+      <pre><span class="cm"># Install</span>
+pip install kyber-agents
+
+<span class="cm"># From source</span>
+git clone github.com/kyber-ai/kyber
+<span class="kw">cd</span> kyber && pip install -e .
+
+<span class="cm"># Demo — no API key needed</span>
+python examples/minimal_org.py
+
+<span class="cm"># Live mode</span>
+ANTHROPIC_API_KEY=sk-ant-... \
+  python examples/minimal_org.py</pre>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">MINIMAL AGENT</span><span class="tag ta">PYTHON</span></div>
+      <pre><span class="kw">from</span> kyber.core.vsm <span class="kw">import</span> (
+    ViableAgent, AgentIdentity,
+    VSMLevel, Task
+)
+
+<span class="kw">class</span> <span class="fn">MyAgent</span>(ViableAgent):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        super().__init__(AgentIdentity(
+            name=<span class="st">"MY_AGENT"</span>,
+            vsm_level=VSMLevel.S1_OPERATIONS,
+            vsm_depth=<span class="nu">1</span>,
+            capabilities=[<span class="st">"analyze"</span>],
+            charter=<span class="st">"Do excellent work."</span>,
+        ))
+
+    <span class="kw">async def</span> <span class="fn">s1_execute</span>(self, task: Task):
+        <span class="kw">return</span> <span class="st">f"Done: {task.intent}"</span></pre>
+    </div>
+  </div>
+  <div style="margin-top:44px;display:flex;gap:14px;flex-wrap:wrap;">
+    <a href="https://github.com/kyber-ai/kyber" class="btn btn-p">GitHub Repository</a>
+    <a href="#" class="btn btn-g">Documentation →</a>
+    <a href="mailto:founders@kyber-agents.dev" class="btn btn-g">Contact</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logo">KYBER</div>
+  <div class="foot-meta">
+    Wiener (1948) · Shannon (1948) · Ashby (1956)<br>
+    Beer (1972) · Maturana (1972) · Conant-Ashby (1970)<br>
+    <span style="color:var(--signal)">MIT License · kyber-agents.dev</span>
+  </div>
+</footer>
+
+</body>
+</html>
