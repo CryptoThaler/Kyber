@@ -47,5 +47,8 @@ Homepage    = "https://github.com/kyber-os/kyber"
 Repository  = "https://github.com/kyber-os/kyber"
 Issues      = "https://github.com/kyber-os/kyber/issues"
 
+[tool.hatch.build.targets.wheel]
+packages = ["kyber"]
+
 [project.scripts]
 kyber = "kyber.__main__:main"
