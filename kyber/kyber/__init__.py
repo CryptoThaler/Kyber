@@ -72,4 +72,12 @@ __version__ = "1.0.0"
 __all__ = ["Kyber","KyberAgent","ClaudeKyberAgent","AgentFactory","VSMLevel","AutonomyLevel",
            "AgentIdentity","AgentState","Task","TaskResult","AlgedonicBus","AlgedonicSignal",
            "S2Coordinator","PolicyEngine","Charter","S3StarAuditor","AutopoieticLoop",
-           "ShannonOptimizer","to_toon","from_toon","default_charter"]
+           "ShannonOptimizer","to_toon","from_toon","default_charter",
+           "TelegramChannel","TelegramConfig"]
+
+# Lazy import for optional telegram dependency
+def __getattr__(name):
+    if name in ("TelegramChannel", "TelegramConfig"):
+        from kyber.channels.telegram import TelegramChannel, TelegramConfig
+        return TelegramChannel if name == "TelegramChannel" else TelegramConfig
+    raise AttributeError(f"module 'kyber' has no attribute {name!r}")

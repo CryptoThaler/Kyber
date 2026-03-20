@@ -83,8 +83,12 @@ kyber/
     policy.py          # PolicyEngine (S5), Charter, S3StarAuditor
   tools/
     claude_agent.py    # ClaudeKyberAgent, AgentFactory
+  channels/
+    telegram.py        # TelegramChannel, TelegramConfig — Telegram bot bridge
 examples/
   demo_basic.py        # Runnable demo — all 5 subsystems
+  telegram_bot.py      # Telegram bot example
+.env.example           # Environment variable template
 CLAUDE.md              # This file
 README.md              # Full documentation
 ```
@@ -145,6 +149,31 @@ kyber.policy.amend_charter(
     amendments={"spend_limits": {"auto": 500.0, "hotl": 5000.0}},
     human_id="alice@company.com"   # Log who authorized it
 )
+```
+
+## How To Connect Telegram
+
+```python
+from kyber import Kyber
+from kyber.channels.telegram import TelegramChannel, TelegramConfig
+
+kyber = Kyber()
+kyber.spawn("assistant", capabilities={"prompt", "think"})
+
+config = TelegramConfig(
+    bot_token="your-token-from-botfather",
+    allowed_chat_ids={123456789},  # restrict to specific chats
+    alerts_chat_id=-100123456,     # forward algedonic signals here
+)
+channel = TelegramChannel(kyber, config)
+channel.run()  # starts polling
+```
+
+Or configure via environment variables (see `.env.example`):
+```bash
+pip install kyber-agent[telegram]
+export KYBER_TELEGRAM_BOT_TOKEN=your-token
+python examples/telegram_bot.py
 ```
 
 ## Running Tests
