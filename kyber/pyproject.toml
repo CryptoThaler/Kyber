@@ -24,10 +24,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+telegram = [
+    "python-telegram-bot>=21.0",
+    "python-dotenv>=1.0",
+]
 full = [
     "prometheus-client>=0.20",
     "redis>=5.0",
     "pinecone-client>=3.0",
+    "python-telegram-bot>=21.0",
+    "python-dotenv>=1.0",
 ]
 dev = [
     "pytest>=8.0",
@@ -40,6 +46,9 @@ dev = [
 Homepage    = "https://github.com/kyber-os/kyber"
 Repository  = "https://github.com/kyber-os/kyber"
 Issues      = "https://github.com/kyber-os/kyber/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["kyber"]
 
 [project.scripts]
 kyber = "kyber.__main__:main"
